@@ -53,7 +53,11 @@ html.com-intro body::before { content: ""; position: fixed; inset: 0; background
   animation: pulsa 2.6s ease-in-out infinite;
 }
 @keyframes pulsa { 50% { box-shadow: 0 0 0 12px rgba(232,207,148,0), 0 10px 30px rgba(0,0,0,.35); } }
-.intro-mudo { background: none; border: 0; color: #cbbd9b; font: 14px "Jost", system-ui, sans-serif; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 6px; }
+.intro-mudo {
+  font-family: "Cinzel", serif; font-weight: 600; font-size: 13px; letter-spacing: .12em; text-transform: uppercase;
+  background: rgba(0,0,0,.18); color: #e8cf94; border: 1px solid rgba(232,207,148,.55); border-radius: 999px; padding: 12px 26px; cursor: pointer;
+}
+.intro-mudo:hover { background: rgba(232,207,148,.12); }
 .intro-pular {
   position: absolute; z-index: 3; top: max(16px, env(safe-area-inset-top)); right: 16px; background: rgba(0,0,0,.25);
   border: 1px solid rgba(232,207,148,.35); color: #e8cf94; border-radius: 999px; padding: 8px 16px;

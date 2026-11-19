@@ -1,12 +1,13 @@
 /* Portal de Gaia — abertura cinematográfica + música ambiente gerada no próprio navegador (sem arquivo de áudio).
-   Aparece na primeira visita de cada pessoa (ou com ?intro=1). Música só começa com um toque (regra dos navegadores). */
+   Aparece em toda visita (uma vez por aba aberta; recarregar a mesma aba não repete). Música só começa com um toque (regra dos navegadores). */
 (function () {
   "use strict";
-  var CHAVE_INTRO = "gaia_intro_v1", CHAVE_SOM = "gaia_som";
-  function ler(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  var CHAVE_INTRO = "gaia_intro_sessao", CHAVE_SOM = "gaia_som";
   function gravar(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* sem armazenamento */ } }
+  function lerSessao(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
+  function gravarSessao(k, v) { try { sessionStorage.setItem(k, v); } catch (e) { /* sem armazenamento */ } }
   var forcar = /[?&]intro=1/.test(location.search);
-  var mostrar = forcar || !ler(CHAVE_INTRO);
+  var mostrar = forcar || !lerSessao(CHAVE_INTRO);
   var calmo = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (mostrar) document.documentElement.classList.add("com-intro");
 
@@ -123,7 +124,7 @@
       '<div class="intro-centro"><img class="intro-logo" src="img/simbolo.png" alt="">' +
       '<p class="intro-nome" aria-label="Portal de Gaia">' + nome + '</p><div class="intro-luas" aria-hidden="true">☽ ● ☾</div>' +
       '<p class="intro-slogan"></p>' +
-      '<div class="intro-acoes"><button type="button" class="intro-entrar">✦ Entrar no portal</button><button type="button" class="intro-mudo">entrar sem som</button></div></div>';
+      '<div class="intro-acoes"><button type="button" class="intro-entrar">✦ Entrar com música</button><button type="button" class="intro-mudo">🔇 Entrar sem som</button></div></div>';
     el.querySelector(".intro-slogan").textContent = slogan();
     document.body.appendChild(el);
 
@@ -183,7 +184,7 @@
 
     function entrar(comSom) {
       if (saiu) return; saiu = true;
-      gravar(CHAVE_INTRO, new Date().toISOString().slice(0, 10));
+      gravarSessao(CHAVE_INTRO, "1");
       if (comSom) Som.ligar();
       timers.forEach(clearTimeout);
       el.classList.add("saindo");

@@ -73,8 +73,12 @@
   }
 
   // ---------- entrada ----------
+  // No celular a tela de entrada fica parada e centralizada: sem rolagem nem zoom (campos com 16px, então o iPhone não amplia ao tocar).
+  function telaEntrada(sim) { document.documentElement.classList.toggle("tela-entrada", !!sim); }
+  ["gesturestart", "gesturechange"].forEach(function (ev) { document.addEventListener(ev, function (e) { e.preventDefault(); }, { passive: false }); });
+  document.addEventListener("touchmove", function (e) { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
   function mostrarEntrada(msg) {
-    $("telaApp").hidden = true; $("telaEntrada").hidden = false; $("formEntrada").hidden = false; $("formNovaSenha").hidden = true;
+    $("telaApp").hidden = true; $("telaEntrada").hidden = false; telaEntrada(true); $("formEntrada").hidden = false; $("formNovaSenha").hidden = true;
     if (msg) { $("entErro").textContent = msg; $("entErro").hidden = false; }
     try { $("entEmail").value = localStorage.getItem("gaia_painel_email") || ""; } catch (e) {}
   }
@@ -117,7 +121,7 @@
         mostrarEntrada(r.error ? erroMsg(r.error) : "Esta conta não tem acesso ao painel da loja.");
         return;
       }
-      $("telaEntrada").hidden = true; $("telaApp").hidden = false;
+      $("telaEntrada").hidden = true; telaEntrada(false); $("telaApp").hidden = false;
       $("contaEmail").textContent = usuario.email;
       carregarTudo().then(function () { irPara(localStorage.getItem("gaia_painel_aba") || "resumo"); });
       ouvirPedidos();
@@ -549,9 +553,9 @@
 
   // ---------- início ----------
   sb.auth.onAuthStateChange(function (evento) {
-    if (evento === "PASSWORD_RECOVERY") { $("telaApp").hidden = true; $("telaEntrada").hidden = false; $("formEntrada").hidden = true; $("formNovaSenha").hidden = false; }
+    if (evento === "PASSWORD_RECOVERY") { $("telaApp").hidden = true; $("telaEntrada").hidden = false; telaEntrada(true); $("formEntrada").hidden = true; $("formNovaSenha").hidden = false; }
   });
-  if (/type=recovery/.test(location.hash)) { $("telaEntrada").hidden = false; $("formEntrada").hidden = true; $("formNovaSenha").hidden = false; }
+  if (/type=recovery/.test(location.hash)) { $("telaEntrada").hidden = false; telaEntrada(true); $("formEntrada").hidden = true; $("formNovaSenha").hidden = false; }
   else sb.auth.getSession().then(function (r) {
     var s = r.data && r.data.session;
     if (s) entrar(s.user); else mostrarEntrada();
