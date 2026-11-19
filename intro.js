@@ -8,7 +8,8 @@
   function gravarSessao(k, v) { try { sessionStorage.setItem(k, v); } catch (e) { /* sem armazenamento */ } }
   var forcar = /[?&]intro=1/.test(location.search);
   var mostrar = forcar || !lerSessao(CHAVE_INTRO);
-  var calmo = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // "Reduzir movimento" do aparelho → versão suave (?movimento=suave força, para conferir)
+  var calmo = /[?&]movimento=suave/.test(location.search) || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   if (mostrar) document.documentElement.classList.add("com-intro");
 
   // =====================================================================
@@ -199,7 +200,18 @@
     el.querySelector(".intro-pular").addEventListener("click", function () { entrar(false); });
     el.addEventListener("keydown", function (e) { if (e.key === "Escape") entrar(false); });
 
-    if (calmo) { el.classList.add("logo-pronto", "brilha", "nome", "slogan", "pronto"); el.querySelector(".intro-entrar").focus(); return; }
+    if (calmo) {
+      // versão suave: céu de estrelas parado + tudo aparece devagar, sem nada se deslocar
+      el.classList.add("suave");
+      g.fillStyle = "#e8cf94";
+      for (var s = 0; s < poeira.length; s++) { g.globalAlpha = 0.2 + Math.random() * 0.4; g.beginPath(); g.arc(poeira[s].x, poeira[s].y, poeira[s].r, 0, 6.283); g.fill(); }
+      g.globalAlpha = 1;
+      depois(200, function () { el.classList.add("brilha", "logo-pronto"); });
+      depois(1800, function () { el.classList.add("nome"); });
+      depois(2900, function () { el.classList.add("slogan"); });
+      depois(3700, function () { el.classList.add("pronto"); el.querySelector(".intro-entrar").focus({ preventScroll: true }); });
+      return;
+    }
     function comecar() { prepararParticulas(); raf = requestAnimationFrame(quadro); }
     if (logo.complete && logo.naturalWidth) comecar(); else { logo.onload = comecar; logo.onerror = function () { raf = requestAnimationFrame(quadro); }; }
     depois(2500, function () { el.classList.add("brilha"); });
