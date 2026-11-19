@@ -11,6 +11,8 @@
 <link rel="apple-touch-icon" href="../img/icone-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Painel Gaia">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
@@ -31,6 +33,7 @@
     <button class="btn primario largo" id="btnEntrar">Entrar</button>
     <button type="button" class="link" id="esqueciSenha">Esqueci minha senha</button>
     <p class="erro" id="entErro" hidden></p>
+    <button type="button" class="btn instalar largo" data-instalar hidden>📲 Baixar o app no celular</button>
   </form>
   <form class="entrada-caixa" id="formNovaSenha" hidden>
     <img src="../img/logo.png" alt="Portal de Gaia" class="entrada-logo">
@@ -183,9 +186,10 @@
         <div class="acoes-form"><button class="btn primario">Trocar senha</button></div>
       </form>
       <div class="cartao">
-        <h3>Instalar o painel no celular</h3>
-        <p class="nota">Android (Chrome): menu ⋮ → <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>. iPhone (Safari): botão Compartilhar → <b>Adicionar à Tela de Início</b>. O painel abre como um aplicativo, com o ícone da loja.</p>
-        <button class="btn claro" id="instalarApp" hidden>Instalar agora</button>
+        <h3>App do painel no celular</h3>
+        <p class="nota" id="notaInstalado" hidden>✦ Você já está usando o app instalado.</p>
+        <p class="nota">O painel vira um aplicativo com o ícone da loja na tela do celular (iPhone e Android). Link para mandar a quem for instalar: <b>sklgeo.github.io/portal-de-gaia/app</b></p>
+        <button class="btn claro" data-instalar>📲 Baixar o app no celular</button>
       </div>
       <div><button class="btn perigo" id="sairConta">Sair do painel neste aparelho</button></div>
     </section>
@@ -272,6 +276,50 @@
       <button type="submit" class="btn primario" value="salvar">Salvar</button>
     </div>
   </form>
+</dialog>
+
+<dialog class="janela" id="dlgInstalar">
+  <div class="janela-form">
+    <div class="janela-cab"><h3>Baixar o app</h3><button type="button" class="fechar" data-fechar aria-label="Fechar">✕</button></div>
+    <div class="janela-corpo instalar-corpo">
+      <div class="instalar-icone"><img src="../img/icone-180.png" alt=""><strong>Painel Gaia</strong></div>
+
+      <div data-passo="interno" hidden>
+        <p class="aviso">Você abriu o link dentro do WhatsApp ou do Instagram. Para instalar, abra no navegador do celular:</p>
+        <ol class="passos">
+          <li>Toque nos <b>três pontinhos</b> (••• ou ⋮) no canto da tela.</li>
+          <li>Escolha <b>Abrir no Safari</b> (iPhone) ou <b>Abrir no Chrome</b> (Android).</li>
+          <li>Lá, toque de novo em <b>📲 Baixar o app no celular</b>.</li>
+        </ol>
+        <button type="button" class="btn claro largo" id="copiarLink">Copiar o link</button>
+      </div>
+
+      <div data-passo="iphone" hidden>
+        <p>No iPhone o app é instalado pelo <b>Safari</b>, em 4 toques:</p>
+        <ol class="passos">
+          <li>Toque no botão <b>Compartilhar</b> <span class="simbolo-share" aria-hidden="true">⬆︎</span> (quadrado com seta para cima). No iOS mais novo ele fica dentro do botão <b>•••</b> da barra de baixo.</li>
+          <li>Role a lista e toque em <b>Adicionar à Tela de Início</b>.</li>
+          <li>Deixe ligado <b>Abrir como App da Web</b>, se aparecer.</li>
+          <li>Toque em <b>Adicionar</b>. O ícone <b>Painel Gaia</b> aparece na tela do iPhone.</li>
+        </ol>
+        <p class="nota">Abra sempre pelo ícone. Na primeira vez ele pede o e-mail e a senha de novo (o app do iPhone guarda o login separado do Safari).</p>
+      </div>
+
+      <div data-passo="android" hidden>
+        <ol class="passos">
+          <li>No <b>Chrome</b>, toque nos <b>três pontinhos ⋮</b> no canto de cima.</li>
+          <li>Toque em <b>Instalar app</b> (ou <b>Adicionar à tela inicial</b>).</li>
+          <li>Confirme em <b>Instalar</b>. O ícone <b>Painel Gaia</b> aparece com os seus apps.</li>
+        </ol>
+      </div>
+
+      <div data-passo="computador" hidden>
+        <p>No computador, abra no <b>Chrome</b> ou no <b>Edge</b> e clique no ícone de instalar (um monitor com seta) no fim da barra de endereço. Para o celular, abra este link nele:</p>
+        <p class="link-app">sklgeo.github.io/portal-de-gaia/app</p>
+      </div>
+    </div>
+    <div class="janela-pe"><span class="espaco"></span><button type="button" class="btn primario" data-fechar>Entendi</button></div>
+  </div>
 </dialog>
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>

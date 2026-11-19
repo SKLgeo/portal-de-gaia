@@ -183,6 +183,19 @@ dialog.janela[open] { display: flex; }
 
 .carregando { color: var(--suave); padding: 20px 0; }
 
+/* instalar o app */
+.btn.instalar { background: linear-gradient(180deg, var(--ouro-claro), var(--ouro)); color: var(--verde-escuro); border-color: #b08b43; margin-top: 4px; }
+.instalar-corpo { gap: 10px; }
+.instalar-icone { display: flex; align-items: center; gap: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--linha); }
+.instalar-icone img { width: 60px; height: 60px; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,.2); }
+.instalar-icone strong { font-family: var(--titulo); color: var(--verde); font-size: 17px; }
+.passos { margin: 6px 0; padding-left: 0; list-style: none; counter-reset: p; display: flex; flex-direction: column; gap: 10px; }
+.passos li { counter-increment: p; position: relative; padding-left: 40px; min-height: 28px; font-size: 15.5px; line-height: 1.45; }
+.passos li::before { content: counter(p); position: absolute; left: 0; top: -1px; width: 28px; height: 28px; border-radius: 50%; background: var(--roxo); color: #fff; display: grid; place-items: center; font-weight: 600; font-size: 14px; }
+.simbolo-share { display: inline-grid; place-items: center; width: 24px; height: 24px; border: 1.5px solid var(--roxo); border-radius: 5px; color: var(--roxo); font-size: 13px; vertical-align: middle; }
+.link-app { font-weight: 600; color: var(--roxo); background: var(--roxo-claro); padding: 10px 12px; border-radius: 10px; word-break: break-all; }
+.entrada { padding-top: max(24px, env(safe-area-inset-top)); }
+
 /* celular */
 @media (max-width: 860px) {
   .app { grid-template-columns: 1fr; }

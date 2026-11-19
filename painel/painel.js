@@ -519,9 +519,32 @@
       $("contaSenha1").value = $("contaSenha2").value = ""; toast("✦ Senha trocada");
     });
   });
-  var pedidoInstalar = null;
-  window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); pedidoInstalar = e; $("instalarApp").hidden = false; });
-  $("instalarApp").onclick = function () { if (pedidoInstalar) { pedidoInstalar.prompt(); pedidoInstalar = null; $("instalarApp").hidden = true; } };
+  // ---------- instalar o app (iPhone, Android, computador) ----------
+  var pedidoInstalar = null, ua = navigator.userAgent;
+  var instalado = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  var eIphone = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var eAndroid = /Android/.test(ua);
+  var navegadorInterno = /Instagram|FBAN|FBAV|FB_IAB|WhatsApp|Line\/|Snapchat|TikTok|; wv\)/.test(ua);
+  document.querySelectorAll("[data-instalar]").forEach(function (b) { b.hidden = instalado; });
+  $("notaInstalado").hidden = !instalado;
+  window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); pedidoInstalar = e; });
+  window.addEventListener("appinstalled", function () { toast("✦ App instalado! Abra pelo ícone Painel Gaia."); });
+  function abrirInstalar() {
+    if (pedidoInstalar && !navegadorInterno) {
+      pedidoInstalar.prompt();
+      pedidoInstalar.userChoice.then(function () { pedidoInstalar = null; });
+      return;
+    }
+    var passo = navegadorInterno ? "interno" : eIphone ? "iphone" : eAndroid ? "android" : "computador";
+    $("dlgInstalar").querySelectorAll("[data-passo]").forEach(function (d) { d.hidden = d.dataset.passo !== passo; });
+    $("dlgInstalar").showModal();
+  }
+  document.addEventListener("click", function (e) { if (e.target.closest("[data-instalar]")) abrirInstalar(); });
+  $("copiarLink").onclick = function () {
+    var link = location.origin + location.pathname.replace(/painel\/.*$/, "app");
+    (navigator.clipboard ? navigator.clipboard.writeText(link) : Promise.reject()).then(function () { toast("Link copiado. Cole no Safari ou no Chrome."); }, function () { prompt("Copie o link:", link); });
+  };
+  if (/[?&]instalar=1/.test(location.search) && !instalado) setTimeout(abrirInstalar, 600);
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(function () {});
 
   // ---------- início ----------
