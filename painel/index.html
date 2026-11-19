@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Painel · Portal de Gaia</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#16301f">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="../img/icone-32.png">
+<link rel="apple-touch-icon" href="../img/icone-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Painel Gaia">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="painel.css">
+</head>
+<body>
+
+<!-- ============ ENTRADA ============ -->
+<section class="entrada" id="telaEntrada" hidden>
+  <form class="entrada-caixa" id="formEntrada">
+    <img src="../img/logo.png" alt="Portal de Gaia" class="entrada-logo">
+    <h1>Painel da loja</h1>
+    <p class="sub" id="entradaSub">Entre com seu e-mail e senha.</p>
+    <label>E-mail<input type="email" id="entEmail" autocomplete="username" required></label>
+    <label>Senha
+      <span class="senha-linha"><input type="password" id="entSenha" autocomplete="current-password" required><button type="button" class="ver-senha" id="verSenha" aria-label="Mostrar senha">👁</button></span>
+    </label>
+    <button class="btn primario largo" id="btnEntrar">Entrar</button>
+    <button type="button" class="link" id="esqueciSenha">Esqueci minha senha</button>
+    <p class="erro" id="entErro" hidden></p>
+  </form>
+  <form class="entrada-caixa" id="formNovaSenha" hidden>
+    <img src="../img/logo.png" alt="Portal de Gaia" class="entrada-logo">
+    <h1>Crie sua nova senha</h1>
+    <label>Nova senha (mínimo 8 caracteres)<input type="password" id="novaSenha1" minlength="8" autocomplete="new-password" required></label>
+    <label>Repita a nova senha<input type="password" id="novaSenha2" minlength="8" autocomplete="new-password" required></label>
+    <button class="btn primario largo">Salvar nova senha</button>
+    <p class="erro" id="novaSenhaErro" hidden></p>
+  </form>
+</section>
+
+<!-- ============ PAINEL ============ -->
+<div class="app" id="telaApp" hidden>
+  <aside class="lateral" id="lateral">
+    <div class="lateral-marca"><img src="../img/simbolo.png" alt=""><div><strong id="lojaNome">Portal de Gaia</strong><span>Painel da loja</span></div></div>
+    <nav class="menu" id="menu">
+      <button data-aba="resumo" class="ativo"><span>📊</span>Resumo</button>
+      <button data-aba="pedidos"><span>🧾</span>Pedidos <b class="bolinha" id="novosPedidos" hidden>0</b></button>
+      <button data-aba="produtos"><span>🔮</span>Produtos</button>
+      <button data-aba="setores"><span>🌙</span>Setores</button>
+      <button data-aba="banners"><span>🖼️</span>Banners</button>
+      <button data-aba="aparencia"><span>🎨</span>Logo, cores e textos</button>
+      <button data-aba="contato"><span>💬</span>Contato e WhatsApp</button>
+      <button data-aba="conta"><span>🔑</span>Minha conta</button>
+    </nav>
+    <div class="lateral-pe">
+      <a class="btn claro largo" href="../" target="_blank" rel="noopener">Ver a loja ↗</a>
+      <button class="btn fantasma largo" id="sair">Sair</button>
+    </div>
+  </aside>
+
+  <main class="principal">
+    <header class="topo-celular">
+      <img src="../img/simbolo.png" alt="">
+      <strong>Painel Gaia</strong>
+      <a href="../" target="_blank" rel="noopener" class="btn claro mini">Ver loja ↗</a>
+    </header>
+
+    <!-- RESUMO -->
+    <section class="aba" id="aba-resumo">
+      <div class="aba-cab"><div><p class="eyebrow">Como a loja está indo</p><h2>Resumo</h2></div>
+        <select id="periodo" aria-label="Período"><option value="7">Últimos 7 dias</option><option value="30" selected>Últimos 30 dias</option><option value="90">Últimos 90 dias</option><option value="365">Último ano</option></select></div>
+      <div class="aviso" id="avisoWhats" hidden>⚠ O WhatsApp da loja ainda não foi cadastrado: sem ele os clientes não conseguem enviar pedidos. <button class="link" data-ir="contato">Cadastrar agora</button></div>
+      <div class="kpis" id="kpis"></div>
+      <div class="cartao"><h3>Visitas por dia</h3><div id="grafico" class="grafico"></div></div>
+      <div class="grade2">
+        <div class="cartao"><h3>Produtos mais vistos</h3><div id="topProdutos"></div></div>
+        <div class="cartao"><h3>Mais pedidos</h3><div id="maisPedidos"></div></div>
+        <div class="cartao"><h3>De onde vêm as visitas</h3><div id="origens"></div></div>
+        <div class="cartao"><h3>Aparelhos</h3><div id="aparelhos"></div></div>
+        <div class="cartao"><h3>Setores mais abertos</h3><div id="setoresVistos"></div></div>
+        <div class="cartao"><h3>O que procuram na busca</h3><div id="buscas"></div></div>
+      </div>
+      <p class="nota">Contamos só visitas de verdade: sem cookies e sem guardar IP. Os seus acessos por este aparelho podem ser ignorados — <button class="link" id="naoContarMeu">não contar meus acessos neste aparelho</button>.</p>
+    </section>
+
+    <!-- PEDIDOS -->
+    <section class="aba" id="aba-pedidos" hidden>
+      <div class="aba-cab"><div><p class="eyebrow">Pedidos enviados pelo carrinho</p><h2>Pedidos</h2></div>
+        <select id="filtroPedidos" aria-label="Situação"><option value="">Todas as situações</option><option value="novo">Novos</option><option value="em_conversa">Em conversa</option><option value="pago">Pagos</option><option value="enviado">Enviados</option><option value="concluido">Concluídos</option><option value="cancelado">Cancelados</option></select></div>
+      <p class="nota">Cada pedido aqui é um carrinho que o cliente mandou para o seu WhatsApp. Atualize a situação conforme a conversa andar — o Resumo usa isso para mostrar quanto foi vendido.</p>
+      <div id="listaPedidos" class="lista-pedidos"></div>
+    </section>
+
+    <!-- PRODUTOS -->
+    <section class="aba" id="aba-produtos" hidden>
+      <div class="aba-cab"><div><p class="eyebrow">Tudo o que aparece na loja</p><h2>Produtos</h2></div>
+        <button class="btn primario" id="novoProduto">+ Novo produto</button></div>
+      <div class="filtro-linha">
+        <input type="search" id="buscaProduto" placeholder="Buscar produto..." aria-label="Buscar produto">
+        <select id="filtroSetor" aria-label="Setor"></select>
+      </div>
+      <div id="listaProdutos" class="lista-produtos"></div>
+    </section>
+
+    <!-- SETORES -->
+    <section class="aba" id="aba-setores" hidden>
+      <div class="aba-cab"><div><p class="eyebrow">As seções da loja (faixa roxa do topo)</p><h2>Setores</h2></div>
+        <button class="btn primario" id="novoSetor">+ Novo setor</button></div>
+      <div id="listaSetores" class="lista-simples"></div>
+    </section>
+
+    <!-- BANNERS -->
+    <section class="aba" id="aba-banners" hidden>
+      <div class="aba-cab"><div><p class="eyebrow">Destaques que passam no topo da loja</p><h2>Banners</h2></div>
+        <button class="btn primario" id="novoBanner">+ Novo banner</button></div>
+      <div id="listaBanners" class="lista-banners"></div>
+    </section>
+
+    <!-- APARÊNCIA -->
+    <section class="aba" id="aba-aparencia" hidden>
+      <div class="aba-cab"><div><p class="eyebrow">Identidade da loja</p><h2>Logo, cores e textos</h2></div></div>
+      <form class="cartao form" id="formAparencia">
+        <h3>Logo</h3>
+        <div class="logo-linha">
+          <div class="logo-previa"><img id="previaLogo" src="../img/logo.png" alt="Logo atual"></div>
+          <div>
+            <p class="nota">Use PNG com fundo transparente para ficar mais bonito no topo da loja.</p>
+            <label class="btn claro arquivo">Trocar logo<input type="file" accept="image/png,image/jpeg,image/webp" id="arquivoLogo" hidden></label>
+            <button type="button" class="link" id="logoOriginal">Voltar ao logo original</button>
+          </div>
+        </div>
+        <h3>Cores</h3>
+        <div class="cores">
+          <label>Verde (fundo e títulos)<input type="color" data-cfg="cor_verde"></label>
+          <label>Roxo (faixa de setores e botões)<input type="color" data-cfg="cor_roxo"></label>
+          <label>Dourado (detalhes)<input type="color" data-cfg="cor_dourado"></label>
+          <button type="button" class="link" id="coresOriginais">Voltar às cores originais</button>
+        </div>
+        <h3>Textos</h3>
+        <label>Nome da loja<input data-cfg="nome" maxlength="80" required></label>
+        <label>Frase da marca<input data-cfg="slogan" maxlength="140"></label>
+        <label>Aviso da faixa do topo (deixe vazio para esconder)<input data-cfg="aviso_topo" maxlength="140"></label>
+        <label>Título principal (usado quando não há banner)<input data-cfg="hero_titulo" maxlength="120"></label>
+        <label>Texto principal (usado quando não há banner)<textarea data-cfg="hero_texto" rows="2" maxlength="300"></textarea></label>
+        <label>Título do “Sobre nós”<input data-cfg="sobre_titulo" maxlength="120"></label>
+        <label>Texto do “Sobre nós”<textarea data-cfg="sobre_texto" rows="5" maxlength="1500"></textarea></label>
+        <div class="logo-linha">
+          <div class="logo-previa foto"><img id="previaSobre" src="../img/foto-vela-cristais.jpg" alt="Foto do Sobre nós"></div>
+          <label class="btn claro arquivo">Trocar foto do “Sobre nós”<input type="file" accept="image/*" id="arquivoSobre" hidden></label>
+        </div>
+        <label>Frase do rodapé<input data-cfg="rodape_texto" maxlength="120"></label>
+        <div class="acoes-form"><button class="btn primario">Salvar aparência</button></div>
+      </form>
+    </section>
+
+    <!-- CONTATO -->
+    <section class="aba" id="aba-contato" hidden>
+      <div class="aba-cab"><div><p class="eyebrow">Como o cliente fala com você</p><h2>Contato e WhatsApp</h2></div></div>
+      <form class="cartao form" id="formContato">
+        <label>WhatsApp da loja (com DDD, só números)<input data-cfg="whatsapp" inputmode="tel" placeholder="66999999999" maxlength="20"></label>
+        <label>Instagram (sem @)<input data-cfg="instagram" placeholder="portaldegaia" maxlength="60"></label>
+        <label>E-mail de contato<input data-cfg="email" type="email" maxlength="120"></label>
+        <label>Endereço ou cidade<input data-cfg="endereco" maxlength="160" placeholder="Rondonópolis - MT"></label>
+        <label>Horário de atendimento<input data-cfg="horario" maxlength="120" placeholder="Seg a sex, 9h às 18h"></label>
+        <label>Texto sobre frete (aparece no carrinho e no produto)<input data-cfg="frete_texto" maxlength="200"></label>
+        <label>Começo da mensagem do pedido no WhatsApp<textarea data-cfg="mensagem_pedido" rows="2" maxlength="300"></textarea></label>
+        <div class="acoes-form"><button class="btn primario">Salvar contato</button><a class="btn claro" id="testarWhats" target="_blank" rel="noopener" href="#">Testar WhatsApp ↗</a></div>
+      </form>
+    </section>
+
+    <!-- CONTA -->
+    <section class="aba" id="aba-conta" hidden>
+      <div class="aba-cab"><div><p class="eyebrow">Seu acesso</p><h2>Minha conta</h2></div></div>
+      <form class="cartao form" id="formSenha">
+        <p>Você entrou como <strong id="contaEmail"></strong>.</p>
+        <h3>Trocar senha</h3>
+        <label>Nova senha (mínimo 8 caracteres)<input type="password" id="contaSenha1" minlength="8" autocomplete="new-password" required></label>
+        <label>Repita a nova senha<input type="password" id="contaSenha2" minlength="8" autocomplete="new-password" required></label>
+        <div class="acoes-form"><button class="btn primario">Trocar senha</button></div>
+      </form>
+      <div class="cartao">
+        <h3>Instalar o painel no celular</h3>
+        <p class="nota">Android (Chrome): menu ⋮ → <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>. iPhone (Safari): botão Compartilhar → <b>Adicionar à Tela de Início</b>. O painel abre como um aplicativo, com o ícone da loja.</p>
+        <button class="btn claro" id="instalarApp" hidden>Instalar agora</button>
+      </div>
+      <div><button class="btn perigo" id="sairConta">Sair do painel neste aparelho</button></div>
+    </section>
+  </main>
+</div>
+
+<!-- ============ JANELAS ============ -->
+<dialog class="janela" id="dlgProduto">
+  <form method="dialog" class="janela-form" id="formProduto">
+    <div class="janela-cab"><h3 id="dlgProdutoTitulo">Produto</h3><button type="button" class="fechar" data-fechar aria-label="Fechar">✕</button></div>
+    <div class="janela-corpo">
+      <div class="fotos-editor">
+        <div class="fotos-lista" id="fotosLista"></div>
+        <label class="btn claro arquivo">📷 Adicionar fotos<input type="file" accept="image/*" multiple id="arquivoFotos" hidden></label>
+        <p class="nota">A primeira foto é a capa. Use as setas para mudar a ordem. Fotos quadradas ficam melhores.</p>
+      </div>
+      <label>Nome do produto<input id="pNome" maxlength="120" required></label>
+      <label>Setor (em que seção da loja ele aparece)<select id="pSetor"></select></label>
+      <div class="duas">
+        <label>Preço (R$)<input id="pPreco" inputmode="decimal" placeholder="0,00" required></label>
+        <label>Preço promocional (opcional)<input id="pPromo" inputmode="decimal" placeholder="vazio = sem promoção"></label>
+      </div>
+      <label>Descrição<textarea id="pDesc" rows="5" maxlength="3000" placeholder="Para que serve, tamanho, aroma, como usar..."></textarea></label>
+      <div class="marcas">
+        <label class="marca"><input type="checkbox" id="pAtivo"> Aparece na loja</label>
+        <label class="marca"><input type="checkbox" id="pDestaque"> Destaque na página inicial</label>
+        <label class="marca"><input type="checkbox" id="pNovo"> Selo “Novo”</label>
+        <label class="marca"><input type="checkbox" id="pEsgotado"> Esgotado</label>
+      </div>
+      <label class="curto">Ordem no setor (menor aparece primeiro)<input id="pOrdem" type="number" min="0" max="9999"></label>
+    </div>
+    <div class="janela-pe">
+      <button type="button" class="btn perigo" id="excluirProduto">Excluir</button>
+      <span class="espaco"></span>
+      <button type="button" class="btn fantasma" data-fechar>Cancelar</button>
+      <button type="submit" class="btn primario" id="salvarProduto" value="salvar">Salvar</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog class="janela" id="dlgSetor">
+  <form method="dialog" class="janela-form" id="formSetor">
+    <div class="janela-cab"><h3 id="dlgSetorTitulo">Setor</h3><button type="button" class="fechar" data-fechar aria-label="Fechar">✕</button></div>
+    <div class="janela-corpo">
+      <label>Nome do setor<input id="sNome" maxlength="60" required placeholder="Ex.: Oráculos e Tarô"></label>
+      <label>Endereço na loja<input id="sSlug" maxlength="60" pattern="[a-z0-9-]+" required><small>Só letras minúsculas, números e hífen. Ex.: oraculos-e-taro</small></label>
+      <label>Frase do setor<input id="sDesc" maxlength="160"></label>
+      <div class="icones-escolha" id="sIcones"></div>
+      <div class="duas">
+        <label>Ordem na faixa (menor primeiro)<input id="sOrdem" type="number" min="0" max="999"></label>
+        <label class="marca alto"><input type="checkbox" id="sAtivo"> Aparece na loja</label>
+      </div>
+    </div>
+    <div class="janela-pe">
+      <button type="button" class="btn perigo" id="excluirSetor">Excluir</button>
+      <span class="espaco"></span>
+      <button type="button" class="btn fantasma" data-fechar>Cancelar</button>
+      <button type="submit" class="btn primario" value="salvar">Salvar</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog class="janela" id="dlgBanner">
+  <form method="dialog" class="janela-form" id="formBanner">
+    <div class="janela-cab"><h3 id="dlgBannerTitulo">Banner</h3><button type="button" class="fechar" data-fechar aria-label="Fechar">✕</button></div>
+    <div class="janela-corpo">
+      <div class="banner-previa" id="bPrevia"></div>
+      <label class="btn claro arquivo">🖼️ Escolher imagem<input type="file" accept="image/*" id="arquivoBanner" hidden></label>
+      <label>Título<input id="bTitulo" maxlength="100"></label>
+      <label>Texto<textarea id="bSub" rows="2" maxlength="220"></textarea></label>
+      <div class="duas">
+        <label>Texto do botão<input id="bBotao" maxlength="40"></label>
+        <label>O botão leva para<select id="bSetor"></select></label>
+      </div>
+      <div class="duas">
+        <label>Ordem (menor primeiro)<input id="bOrdem" type="number" min="0" max="999"></label>
+        <label class="marca alto"><input type="checkbox" id="bAtivo"> Aparece na loja</label>
+      </div>
+    </div>
+    <div class="janela-pe">
+      <button type="button" class="btn perigo" id="excluirBanner">Excluir</button>
+      <span class="espaco"></span>
+      <button type="button" class="btn fantasma" data-fechar>Cancelar</button>
+      <button type="submit" class="btn primario" value="salvar">Salvar</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="../config.js"></script>
+<script src="vendor/supabase.js"></script>
+<script src="painel.js"></script>
+</body>
+</html>

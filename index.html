@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portal de Gaia · Loja esotérica</title>
+<meta name="description" content="Portal de Gaia: cristais, velas, incensos, ervas, banhos energéticos e artigos para rituais. Conecte-se com a Terra, desperte sua magia.">
+<meta name="theme-color" content="#16301f">
+<meta property="og:title" content="Portal de Gaia · Loja esotérica">
+<meta property="og:description" content="Cristais, velas, ervas e artigos para rituais. Conecte-se com a Terra, desperte sua magia.">
+<meta property="og:image" content="img/compartilhar.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/png" sizes="32x32" href="img/icone-32.png">
+<link rel="apple-touch-icon" href="img/icone-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="loja.css">
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+<div class="aviso-topo" id="avisoTopo">✦ Envio para todo o Brasil · Atendimento pelo WhatsApp ✦</div>
+
+<header class="cabecalho">
+  <div class="cab-linha">
+    <button class="btn-icone so-celular" id="abrirMenu" aria-label="Abrir menu"></button>
+    <a href="#/" class="logo" aria-label="Portal de Gaia, página inicial"><img id="logoImg" src="img/logo.png" alt="Portal de Gaia"></a>
+    <nav class="menu-principal" aria-label="Menu principal">
+      <a href="#/">Início</a>
+      <a href="#/loja">Loja</a>
+      <a href="#sobre" data-rolar="sobre">Sobre nós</a>
+      <a href="#contato" data-rolar="contato">Contato</a>
+    </nav>
+    <form class="busca" id="formBusca" role="search">
+      <input type="search" id="campoBusca" placeholder="O que você procura?" aria-label="Buscar produtos" autocomplete="off">
+      <button type="submit" aria-label="Buscar" id="btnBusca"></button>
+    </form>
+    <button class="btn-carrinho" id="abrirCarrinho" aria-label="Abrir carrinho">
+      <span id="icCarrinho"></span><span class="contador" id="contadorCarrinho" hidden>0</span>
+    </button>
+  </div>
+  <nav class="faixa-setores" id="faixaSetores" aria-label="Setores da loja"></nav>
+</header>
+
+<div class="gaveta-menu" id="gavetaMenu" hidden>
+  <div class="gaveta-fundo" data-fechar-menu></div>
+  <aside class="gaveta-painel" aria-label="Menu">
+    <div class="gaveta-topo"><img src="img/logo.png" alt="" class="gaveta-logo" id="logoGaveta"><button class="btn-icone" data-fechar-menu aria-label="Fechar menu" id="fecharMenu"></button></div>
+    <a href="#/" data-fechar-menu>Início</a>
+    <a href="#/loja" data-fechar-menu>Toda a loja</a>
+    <div class="gaveta-titulo">Setores</div>
+    <div id="gavetaSetores"></div>
+    <a href="#sobre" data-rolar="sobre" data-fechar-menu>Sobre nós</a>
+    <a href="#contato" data-rolar="contato" data-fechar-menu>Contato</a>
+  </aside>
+</div>
+
+<main id="conteudo" tabindex="-1"></main>
+
+<section class="sobre" id="sobre">
+  <div class="sobre-img"><img id="sobreImg" src="img/foto-vela-cristais.jpg" alt="Vela e cristais de ametista do Portal de Gaia" loading="lazy"></div>
+  <div class="sobre-texto">
+    <p class="sobretitulo">Nossa essência</p>
+    <h2 id="sobreTitulo">Uma loja para conectar você com a força da Terra</h2>
+    <p id="sobreTexto"></p>
+    <ul class="pilares" id="pilares"></ul>
+  </div>
+</section>
+
+<section class="contato" id="contato">
+  <div class="contato-in">
+    <p class="sobretitulo">Fale com a gente</p>
+    <h2>Que a energia da Terra guie seus passos</h2>
+    <p class="contato-sub">Tire dúvidas, peça indicação de cristal ou monte seu kit personalizado.</p>
+    <div class="contato-botoes" id="contatoBotoes"></div>
+    <ul class="contato-info" id="contatoInfo"></ul>
+  </div>
+</section>
+
+<footer class="rodape">
+  <img src="img/simbolo.png" alt="" class="rodape-simbolo">
+  <p class="rodape-nome" id="rodapeNome">Portal de Gaia</p>
+  <p class="rodape-lema" id="rodapeLema">Magia · Natureza · Espiritualidade</p>
+  <p class="rodape-pe">© <span id="ano"></span> Portal de Gaia · Produtos esotéricos não substituem acompanhamento médico ou psicológico.</p>
+</footer>
+
+<a class="whats-flutuante" id="whatsFlutuante" href="#" target="_blank" rel="noopener" aria-label="Falar no WhatsApp" hidden></a>
+
+<div class="carrinho" id="carrinho" hidden>
+  <div class="gaveta-fundo" data-fechar-carrinho></div>
+  <aside class="carrinho-painel" aria-label="Carrinho" role="dialog" aria-modal="true">
+    <div class="carrinho-topo">
+      <h2>Seu carrinho</h2>
+      <button class="btn-icone" data-fechar-carrinho aria-label="Fechar carrinho" id="fecharCarrinho"></button>
+    </div>
+    <div class="carrinho-itens" id="carrinhoItens"></div>
+    <div class="carrinho-rodape" id="carrinhoRodape">
+      <div class="carrinho-total"><span>Total</span><strong id="carrinhoTotal">R$ 0,00</strong></div>
+      <p class="carrinho-frete" id="carrinhoFrete"></p>
+      <label class="campo">Seu nome<input id="pedidoNome" maxlength="120" autocomplete="name" placeholder="Como podemos te chamar?"></label>
+      <label class="campo">Observação (opcional)<textarea id="pedidoObs" maxlength="600" rows="2" placeholder="Cidade para entrega, presente, intenção do kit..."></textarea></label>
+      <button class="btn-dourado largo" id="finalizarPedido"></button>
+      <p class="carrinho-ajuda">O pedido abre pronto no WhatsApp. Pagamento e frete são combinados na conversa.</p>
+    </div>
+  </aside>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="config.js"></script>
+<script src="loja.js"></script>
+</body>
+</html>

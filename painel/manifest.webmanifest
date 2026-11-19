@@ -1,0 +1,16 @@
+{
+  "name": "Painel Portal de Gaia",
+  "short_name": "Painel Gaia",
+  "description": "Painel da loja Portal de Gaia: produtos, pedidos e acessos.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#16301f",
+  "theme_color": "#16301f",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "../img/icone-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "../img/icone-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "../img/icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
