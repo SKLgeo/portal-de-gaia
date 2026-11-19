@@ -55,11 +55,13 @@
       <button data-aba="produtos"><span>🔮</span>Produtos</button>
       <button data-aba="setores"><span>🌙</span>Setores</button>
       <button data-aba="banners"><span>🖼️</span>Banners</button>
-      <button data-aba="aparencia"><span>🎨</span>Logo, cores e textos</button>
-      <button data-aba="contato"><span>💬</span>Contato e WhatsApp</button>
-      <button data-aba="conta"><span>🔑</span>Minha conta</button>
+      <button data-aba="aparencia" data-so-dono><span>🎨</span>Logo, cores e textos</button>
+      <button data-aba="contato" data-so-dono><span>💬</span>Contato e WhatsApp</button>
+      <button data-aba="equipe" data-so-dono><span>👥</span>Equipe</button>
+      <button data-aba="conta"><span>👤</span>Minha ficha</button>
     </nav>
     <div class="lateral-pe">
+      <button class="eu-chip" id="euChip" data-ir="conta" title="Minha ficha"></button>
       <a class="btn claro largo" href="../" target="_blank" rel="noopener">Ver a loja ↗</a>
       <button class="btn fantasma largo" id="sair">Sair</button>
     </div>
@@ -70,6 +72,7 @@
       <img src="../img/simbolo.png" alt="">
       <strong>Painel Gaia</strong>
       <a href="../" target="_blank" rel="noopener" class="btn claro mini">Ver loja ↗</a>
+      <button class="eu-mini" id="euMini" data-ir="conta" aria-label="Minha ficha"></button>
     </header>
 
     <!-- RESUMO -->
@@ -175,18 +178,32 @@
       </form>
     </section>
 
-    <!-- CONTA -->
+    <!-- EQUIPE -->
+    <section class="aba" id="aba-equipe" hidden>
+      <div class="aba-cab"><div><p class="eyebrow">Quem pode entrar no painel</p><h2>Equipe</h2></div>
+        <button class="btn primario" id="novaPessoa">+ Adicionar pessoa</button></div>
+      <p class="nota"><b>Administradora</b> mexe em tudo, inclusive equipe, logo, cores, textos e contato. <b>Colaboradora</b> cuida de produtos, setores, banners e pedidos e vê o resumo.</p>
+      <div id="listaEquipe" class="lista-equipe"></div>
+    </section>
+
+    <!-- MINHA FICHA -->
     <section class="aba" id="aba-conta" hidden>
-      <div class="aba-cab"><div><p class="eyebrow">Seu acesso</p><h2>Minha conta</h2></div></div>
+      <div class="aba-cab"><div><p class="eyebrow">Seus dados no painel</p><h2>Minha ficha</h2></div></div>
+      <form class="cartao form ficha-form" id="formMinhaFicha" novalidate>
+        <div id="minhaFicha"></div>
+        <div class="acoes-form"><button class="btn primario" id="salvarMinhaFicha">Salvar minha ficha</button></div>
+      </form>
       <form class="cartao form" id="formSenha">
-        <p>Você entrou como <strong id="contaEmail"></strong>.</p>
-        <h3>Trocar senha</h3>
+        <h3>🔑 Trocar minha senha</h3>
+        <p class="nota">Você entra como <strong id="contaEmail"></strong>.</p>
+        <label>Senha atual<input type="password" id="contaSenhaAtual" autocomplete="current-password" required></label>
         <label>Nova senha (mínimo 8 caracteres)<input type="password" id="contaSenha1" minlength="8" autocomplete="new-password" required></label>
         <label>Repita a nova senha<input type="password" id="contaSenha2" minlength="8" autocomplete="new-password" required></label>
-        <div class="acoes-form"><button class="btn primario">Trocar senha</button></div>
+        <label class="marca"><input type="checkbox" id="contaVerSenhas"> Mostrar as senhas</label>
+        <div class="acoes-form"><button class="btn primario" id="btnTrocarSenha">Trocar senha</button></div>
       </form>
       <div class="cartao">
-        <h3>App do painel no celular</h3>
+        <h3>📲 App do painel no celular</h3>
         <p class="nota" id="notaInstalado" hidden>✦ Você já está usando o app instalado.</p>
         <p class="nota">O painel vira um aplicativo com o ícone da loja na tela do celular (iPhone e Android). Link para mandar a quem for instalar: <b>sklgeo.github.io/portal-de-gaia/app</b></p>
         <button class="btn claro" data-instalar>📲 Baixar o app no celular</button>
@@ -322,10 +339,45 @@
   </div>
 </dialog>
 
+<dialog class="janela larga" id="dlgPessoa">
+  <form method="dialog" class="janela-form ficha-form" id="formPessoa" novalidate>
+    <div class="janela-cab"><h3 id="dlgPessoaTitulo">Pessoa da equipe</h3><button type="button" class="fechar" data-fechar aria-label="Fechar">✕</button></div>
+    <div class="janela-corpo">
+      <div id="pessoaFicha"></div>
+      <fieldset class="bloco" id="pessoaAcesso">
+        <legend>Acesso ao painel</legend>
+        <div class="duas">
+          <label>E-mail para entrar<input type="email" id="pEmail" autocomplete="off" maxlength="120"></label>
+          <label>Nível de acesso<select id="pPapel"><option value="colaborador">Colaboradora (produtos e pedidos)</option><option value="administrador">Administradora (tudo)</option></select></label>
+        </div>
+        <div id="pSenhaLinha">
+          <label>Senha provisória (mínimo 8)
+            <span class="senha-linha"><input type="text" id="pSenha" autocomplete="new-password" minlength="8" maxlength="72"><button type="button" class="btn claro" id="gerarSenha">Gerar</button></span>
+          </label>
+          <p class="nota">Passe a senha para a pessoa por mensagem separada. Ela troca em “Minha ficha” no primeiro acesso.</p>
+        </div>
+        <label class="marca" id="pAtivoLinha"><input type="checkbox" id="pAtivo"> Acesso liberado (desmarque para bloquear sem apagar)</label>
+        <div class="acoes-linha" id="pessoaAcoes">
+          <button type="button" class="btn claro" id="pRedefinirSenha">🔑 Redefinir senha</button>
+          <button type="button" class="btn claro" id="pTrocarEmail">✉️ Trocar e-mail</button>
+          <a class="btn claro" id="pWhats" target="_blank" rel="noopener" href="#">💬 Enviar acesso pelo WhatsApp</a>
+        </div>
+      </fieldset>
+    </div>
+    <div class="janela-pe">
+      <button type="button" class="btn perigo" id="pRemover">Remover da equipe</button>
+      <span class="espaco"></span>
+      <button type="button" class="btn fantasma" data-fechar>Cancelar</button>
+      <button type="submit" class="btn primario" id="pSalvar">Salvar</button>
+    </div>
+  </form>
+</dialog>
+
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
 <script src="../config.js"></script>
 <script src="vendor/supabase.js"></script>
 <script src="painel.js"></script>
+<script src="equipe.js"></script>
 </body>
 </html>

@@ -30,6 +30,13 @@
     if (/Failed to fetch|NetworkError/i.test(m)) return "Sem conexão com a internet. Tente de novo.";
     if (/Password should be/i.test(m)) return "A senha precisa ter pelo menos 8 caracteres.";
     if (/same.*password|different from the old/i.test(m)) return "A nova senha precisa ser diferente da atual.";
+    if (/ULTIMA_ADMINISTRADORA/.test(m)) return "A loja precisa ter pelo menos uma administradora ativa.";
+    if (/EMAIL_JA_EXISTE/.test(m)) return "Já existe uma conta com esse e-mail.";
+    if (/JA_NA_EQUIPE/.test(m)) return "Essa pessoa já está na equipe.";
+    if (/EMAIL_INVALIDO/.test(m)) return "E-mail inválido.";
+    if (/SENHA_CURTA/.test(m)) return "A senha precisa ter pelo menos 8 caracteres.";
+    if (/NAO_PODE_SE_REMOVER/.test(m)) return "Você não pode remover a si mesma.";
+    if (/NAO_LOGADO|JWT|session/i.test(m)) return "Sua sessão expirou. Saia e entre de novo.";
     return m;
   }
   function ocupado(botao, sim, texto) { if (!botao) return; if (sim) { botao.dataset.t = botao.textContent; botao.textContent = texto || "Salvando…"; botao.disabled = true; } else { botao.textContent = botao.dataset.t || botao.textContent; botao.disabled = false; } }
@@ -121,10 +128,18 @@
         mostrarEntrada(r.error ? erroMsg(r.error) : "Esta conta não tem acesso ao painel da loja.");
         return;
       }
-      $("telaEntrada").hidden = true; telaEntrada(false); $("telaApp").hidden = false;
-      $("contaEmail").textContent = usuario.email;
-      carregarTudo().then(function () { irPara(localStorage.getItem("gaia_painel_aba") || "resumo"); });
-      ouvirPedidos();
+      sb.from("equipe").select("*").eq("user_id", usuario.id).single().then(function (f) {
+        estado.eu = f.data || { user_id: usuario.id, email: usuario.email, nome: usuario.email, papel: "colaborador" };
+        estado.dono = estado.eu.papel === "administrador";
+        // colaborador não vê Equipe, Logo/cores/textos nem Contato (o banco também não deixa salvar)
+        document.querySelectorAll("[data-so-dono]").forEach(function (b) { b.hidden = !estado.dono; });
+        $("telaEntrada").hidden = true; telaEntrada(false); $("telaApp").hidden = false;
+        $("contaEmail").textContent = usuario.email;
+        sb.rpc("equipe_registrar_acesso").then(function () {});
+        if (window.GaiaEquipe) window.GaiaEquipe.aoEntrar();
+        carregarTudo().then(function () { irPara(localStorage.getItem("gaia_painel_aba") || "resumo"); });
+        ouvirPedidos();
+      });
     });
   }
   $("sair").onclick = $("sairConta").onclick = function () { sb.auth.signOut({ scope: "local" }).then(function () { mostrarEntrada(); }); };
@@ -148,10 +163,13 @@
   // ---------- navegação ----------
   function irPara(aba) {
     if (!$("aba-" + aba)) aba = "resumo";
+    var botao = document.querySelector('#menu button[data-aba="' + aba + '"]');
+    if (botao && botao.hidden) aba = "resumo";
     document.querySelectorAll(".aba").forEach(function (s) { s.hidden = s.id !== "aba-" + aba; });
     document.querySelectorAll("#menu button").forEach(function (b) { b.classList.toggle("ativo", b.dataset.aba === aba); });
     try { localStorage.setItem("gaia_painel_aba", aba); } catch (e) {}
-    ({ resumo: desenharResumo, pedidos: carregarPedidos, produtos: desenharProdutos, setores: desenharSetores, banners: desenharBanners, aparencia: preencherAparencia, contato: preencherContato, conta: function () {} })[aba]();
+    ({ resumo: desenharResumo, pedidos: carregarPedidos, produtos: desenharProdutos, setores: desenharSetores, banners: desenharBanners, aparencia: preencherAparencia, contato: preencherContato,
+      equipe: function () { window.GaiaEquipe.desenharEquipe(); }, conta: function () { window.GaiaEquipe.desenharMinhaFicha(); } })[aba]();
     window.scrollTo(0, 0);
   }
   $("menu").addEventListener("click", function (e) { var b = e.target.closest("button[data-aba]"); if (b) irPara(b.dataset.aba); });
@@ -514,15 +532,9 @@
     enviarImagem(f, "marca", { max: 1400 }).then(function (u) { pendente.sobre_imagem_url = u; $("previaSobre").src = u; toast("Foto enviada. Toque em “Salvar aparência”."); }).catch(function (e) { toast(erroMsg(e), true); });
   });
 
-  // ---------- conta ----------
-  $("formSenha").addEventListener("submit", function (e) {
-    e.preventDefault();
-    if ($("contaSenha1").value !== $("contaSenha2").value) { toast("As duas senhas não estão iguais.", true); return; }
-    sb.auth.updateUser({ password: $("contaSenha1").value }).then(function (r) {
-      if (r.error) { toast(erroMsg(r.error), true); return; }
-      $("contaSenha1").value = $("contaSenha2").value = ""; toast("✦ Senha trocada");
-    });
-  });
+  // ---------- compartilhado com equipe.js (Equipe e Minha ficha) ----------
+  window.GAIA_PAINEL = { sb: sb, $: $, esc: esc, toast: toast, erroMsg: erroMsg, ocupado: ocupado, comprimir: comprimir, estado: estado, irPara: irPara };
+
   // ---------- instalar o app (iPhone, Android, computador) ----------
   var pedidoInstalar = null, ua = navigator.userAgent;
   var instalado = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
