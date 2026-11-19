@@ -80,14 +80,3 @@ html.com-intro body::before { content: ""; position: fixed; inset: 0; background
 .som .risco { opacity: 0; transition: opacity .3s; }
 .som.tocando::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 1px solid rgba(232,207,148,.5); animation: onda 2.4s ease-out infinite; }
 @keyframes onda { from { transform: scale(.9); opacity: .9; } to { transform: scale(1.35); opacity: 0; } }
-
-/* Versão suave (aparelho com "Reduzir movimento"): nada se desloca, gira, amplia nem desfoca.
-   Só aparece devagar e acende o brilho. !important porque o loja.css zera as transições nesse modo. */
-.intro.suave { transition: opacity 1.4s ease !important; }
-.intro.suave.saindo { filter: none; transform: none; }
-.intro.suave .intro-halo { transform: translate(-50%, -50%) !important; animation: none !important; transition: opacity 3s ease !important; }
-.intro.suave .intro-logo { transform: none !important; transition: opacity 2.6s ease !important; }
-.intro.suave .intro-nome span { transform: none !important; filter: none !important; transition: opacity 1.8s ease !important; }
-.intro.suave .intro-luas { transition: opacity 2s ease .6s !important; }
-.intro.suave .intro-slogan, .intro.suave .intro-acoes { transform: none !important; transition: opacity 1.8s ease !important; }
-.intro.suave .intro-entrar { animation: none !important; }

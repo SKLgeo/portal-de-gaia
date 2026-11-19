@@ -308,5 +308,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .whats-flutuante { width: 54px; height: 54px; right: 14px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  /* a abertura (.intro) anima sempre, a pedido da dona */
+  *:not(.intro):not(.intro *), *:not(.intro *)::before, *:not(.intro *)::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
